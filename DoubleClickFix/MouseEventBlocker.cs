@@ -16,7 +16,7 @@ namespace DoubleClickFix
 
         private delegate IntPtr LowLevelMouseProc(int nCode, MouseMessages wParam, MSLLHOOKSTRUCT lParam);
         private LowLevelMouseProc _proc;
-        private IntPtr _hookId = IntPtr.Zero;
+        private IntPtr _hookPtr = IntPtr.Zero;
 
         public MouseEventBlocker()
         {
@@ -25,26 +25,21 @@ namespace DoubleClickFix
 
         public void Hook()
         {
-            if (_hookId != IntPtr.Zero)
+            if (_hookPtr != IntPtr.Zero)
                 throw new InvalidOperationException();
 
-            _hookId = SetHook(_proc);
+            _hookPtr = SetWindowsHookEx(HookType.WH_MOUSE_LL, _proc, GetModuleHandle("user32"), 0);
+            if (_hookPtr == IntPtr.Zero)
+                throw new Win32Exception();
         }
 
         public void Unhook()
         {
-            if (_hookId == IntPtr.Zero)
+            if (_hookPtr == IntPtr.Zero)
                 throw new InvalidOperationException();
 
-            UnhookWindowsHookEx(_hookId);
-        }
-
-        private IntPtr SetHook(LowLevelMouseProc proc)
-        {
-            IntPtr hook = SetWindowsHookEx(HookType.WH_MOUSE_LL, proc, GetModuleHandle("user32"), 0);
-            if (hook == IntPtr.Zero)
-                throw new Win32Exception();
-            return hook;
+            UnhookWindowsHookEx(_hookPtr);
+            _hookPtr = IntPtr.Zero;
         }
 
         private IntPtr HookCallback(int nCode, MouseMessages wParam, MSLLHOOKSTRUCT lParam)
@@ -61,7 +56,7 @@ namespace DoubleClickFix
 
                 _lastEventTimes[wParam] = lParam.time;
             }
-            return CallNextHookEx(_hookId, nCode, wParam, lParam);
+            return CallNextHookEx(_hookPtr, nCode, wParam, lParam);
         }
 
         private enum HookType : int
