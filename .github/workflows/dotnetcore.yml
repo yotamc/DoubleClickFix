@@ -11,11 +11,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0
-        # dotnet-version: 3.1.101
+    # - name: Setup .NET Core
+    #   uses: actions/setup-dotnet@v1
+    #   with:
+    #     dotnet-version: 3.1.101
+    - name: Use .NET 5.0 docker container
+      uses: docker://mcr.microsoft.com/dotnet/core/sdk:3.1
     - name: Install dependencies
       run: dotnet restore
     - name: Build
