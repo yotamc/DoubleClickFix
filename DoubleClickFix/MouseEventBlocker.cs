@@ -15,14 +15,20 @@ namespace DoubleClickFix
         };
 
         private delegate IntPtr LowLevelMouseProc(int nCode, MouseMessages wParam, MSLLHOOKSTRUCT lParam);
+        private LowLevelMouseProc _proc;
         private IntPtr _hookId = IntPtr.Zero;
+
+        public MouseEventBlocker()
+        {
+            _proc = HookCallback;
+        }
 
         public void Hook()
         {
             if (_hookId != IntPtr.Zero)
                 throw new InvalidOperationException();
 
-            _hookId = SetHook(HookCallback);
+            _hookId = SetHook(_proc);
         }
 
         public void Unhook()

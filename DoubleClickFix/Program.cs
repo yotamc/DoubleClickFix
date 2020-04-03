@@ -11,7 +11,6 @@ namespace DoubleClickFix
             // Application.SetHighDpiMode(HighDpiMode.SystemAware);
             // Application.EnableVisualStyles();
             // Application.SetCompatibleTextRenderingDefault(false);
-            Console.WriteLine("test");
             var mouseEventBlocker = new MouseEventBlocker();
             try
             {
