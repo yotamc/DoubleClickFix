@@ -11,6 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: docker://mcr.microsoft.com/dotnet/core/sdk:5.0
+    - run: dotnet --version
     - name: Install dependencies
       run: dotnet restore
     - name: Build
