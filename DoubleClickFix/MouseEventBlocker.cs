@@ -5,68 +5,57 @@ using System.Runtime.InteropServices;
 
 namespace DoubleClickFix
 {
-    class InterceptMouse
+    class MouseEventBlocker
     {
+        //TODO make these configurable
         private const int MinTimeDifference = 125;
-        private delegate IntPtr LowLevelMouseProc(int nCode, MouseMessages wParam, IntPtr lParam);
+        private Dictionary<MouseMessages, uint> _lastEventTimes = new Dictionary<MouseMessages, uint>{
+            {MouseMessages.WM_LBUTTONDOWN, 0},
+            {MouseMessages.WM_LBUTTONUP, 0}
+        };
 
-        private Dictionary<MouseMessages, uint> _lastEventTimes = new Dictionary<MouseMessages, uint>();
-
-        private LowLevelMouseProc _proc;
-        private IntPtr _hookID = IntPtr.Zero;
-
-        public InterceptMouse()
-        {
-            _proc = HookCallback;
-
-            //TODO make this configurable
-            _lastEventTimes[MouseMessages.WM_LBUTTONDOWN] = 0;
-            _lastEventTimes[MouseMessages.WM_LBUTTONUP] = 0;
-        }
+        private delegate IntPtr LowLevelMouseProc(int nCode, MouseMessages wParam, MSLLHOOKSTRUCT lParam);
+        private IntPtr _hookId = IntPtr.Zero;
 
         public void Hook()
         {
-            _hookID = SetHook(_proc);
+            if (_hookId != IntPtr.Zero)
+                throw new InvalidOperationException();
+
+            _hookId = SetHook(HookCallback);
         }
 
         public void Unhook()
         {
-            UnhookWindowsHookEx(_hookID);
+            if (_hookId == IntPtr.Zero)
+                throw new InvalidOperationException();
+
+            UnhookWindowsHookEx(_hookId);
         }
 
         private IntPtr SetHook(LowLevelMouseProc proc)
         {
             IntPtr hook = SetWindowsHookEx(HookType.WH_MOUSE_LL, proc, GetModuleHandle("user32"), 0);
             if (hook == IntPtr.Zero)
-            {
                 throw new Win32Exception();
-            }
             return hook;
-            // using (Process curProcess = Process.GetCurrentProcess())
-            // using (ProcessModule curModule = curProcess.MainModule)
-            // {
-            //     return SetWindowsHookEx(HookType.WH_MOUSE_LL, proc,
-            //         GetModuleHandle(curModule.ModuleName), 0);
-            // }
         }
 
-        private IntPtr HookCallback(int nCode, MouseMessages wParam, IntPtr lParam)
+        private IntPtr HookCallback(int nCode, MouseMessages wParam, MSLLHOOKSTRUCT lParam)
         {
             if (nCode >= 0 && _lastEventTimes.ContainsKey(wParam))
             {
-                MSLLHOOKSTRUCT hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
-
-                var timeDiff = hookStruct.time - _lastEventTimes[wParam];
+                var timeDiff = lParam.time - _lastEventTimes[wParam];
                 var shouldBlock = timeDiff < MinTimeDifference;
-                Console.WriteLine($"{hookStruct.time} (d:{timeDiff}ms) {wParam} {(shouldBlock ? "BLOCKED" : "OK")}: x:{hookStruct.pt.x} y:{hookStruct.pt.y}");
+                Console.WriteLine($"{lParam.time} (d:{timeDiff}ms) {wParam} {(shouldBlock ? "BLOCKED" : "OK")}: x:{lParam.pt.x} y:{lParam.pt.y}");
                 if (shouldBlock)
                 {
                     return new IntPtr(1);
                 }
 
-                _lastEventTimes[wParam] = hookStruct.time;
+                _lastEventTimes[wParam] = lParam.time;
             }
-            return CallNextHookEx(_hookID, nCode, wParam, lParam);
+            return CallNextHookEx(_hookId, nCode, wParam, lParam);
         }
 
         private enum HookType : int
@@ -112,7 +101,7 @@ namespace DoubleClickFix
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode,
-            MouseMessages wParam, IntPtr lParam);
+            MouseMessages wParam, MSLLHOOKSTRUCT lParam);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr GetModuleHandle(string lpModuleName);

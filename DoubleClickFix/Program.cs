@@ -12,15 +12,15 @@ namespace DoubleClickFix
             // Application.EnableVisualStyles();
             // Application.SetCompatibleTextRenderingDefault(false);
             Console.WriteLine("test");
-            var interceptMouse = new InterceptMouse();
+            var mouseEventBlocker = new MouseEventBlocker();
             try
             {
-                interceptMouse.Hook();
+                mouseEventBlocker.Hook();
                 Application.Run();
             }
             finally
             {
-                interceptMouse.Unhook();
+                mouseEventBlocker.Unhook();
             }
         }
     }
