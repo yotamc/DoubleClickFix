@@ -5,16 +5,16 @@ using System.Runtime.InteropServices;
 
 namespace DoubleClickFix
 {
-    class MouseEventBlocker
-    {
-        //TODO make these configurable
-        private const int MinTimeDifference = 125;
-        private Dictionary<MouseMessages, uint> _lastEventTimes = new Dictionary<MouseMessages, uint>{
-            {MouseMessages.WM_LBUTTONDOWN, 0},
-            {MouseMessages.WM_LBUTTONUP, 0}
-        };
 
-        private delegate IntPtr LowLevelMouseProc(int nCode, MouseMessages wParam, MSLLHOOKSTRUCT lParam);
+    public class MouseEventBlocker : IEventBlocker<MouseEvent>
+    {
+        public uint Threshold { get; set; } = 125;
+        private Dictionary<MouseInputNotification, uint> _lastEventTimes = new Dictionary<MouseInputNotification, uint>();
+        private static readonly Dictionary<MouseEvent, IEnumerable<MouseInputNotification>> _mouseEventsMap = new Dictionary<MouseEvent, IEnumerable<MouseInputNotification>>
+        {
+            { MouseEvent.LeftMouseButton, new[] { MouseInputNotification.WM_LBUTTONDOWN, MouseInputNotification.WM_LBUTTONUP } }
+        };
+        private delegate IntPtr LowLevelMouseProc(int nCode, MouseInputNotification wParam, MSLLHOOKSTRUCT lParam);
         private LowLevelMouseProc _proc;
         private IntPtr _hookPtr = IntPtr.Zero;
 
@@ -23,7 +23,33 @@ namespace DoubleClickFix
             _proc = HookCallback;
         }
 
-        public void Hook()
+        public void Register(MouseEvent value)
+        {
+            if (_mouseEventsMap.TryGetValue(value, out var collection))
+            {
+                foreach (var obj in collection)
+                    _lastEventTimes[obj] = 0;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public void Unegister(MouseEvent value)
+        {
+            if (_mouseEventsMap.TryGetValue(value, out var collection))
+            {
+                foreach (var obj in collection)
+                    _lastEventTimes.Remove(obj);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public void Start()
         {
             if (_hookPtr != IntPtr.Zero)
                 throw new InvalidOperationException();
@@ -33,7 +59,7 @@ namespace DoubleClickFix
                 throw new Win32Exception();
         }
 
-        public void Unhook()
+        public void Stop()
         {
             if (_hookPtr == IntPtr.Zero)
                 throw new InvalidOperationException();
@@ -42,12 +68,12 @@ namespace DoubleClickFix
             _hookPtr = IntPtr.Zero;
         }
 
-        private IntPtr HookCallback(int nCode, MouseMessages wParam, MSLLHOOKSTRUCT lParam)
+        private IntPtr HookCallback(int nCode, MouseInputNotification wParam, MSLLHOOKSTRUCT lParam)
         {
             if (nCode >= 0 && _lastEventTimes.ContainsKey(wParam))
             {
                 var timeDiff = lParam.time - _lastEventTimes[wParam];
-                var shouldBlock = timeDiff < MinTimeDifference;
+                var shouldBlock = timeDiff < Threshold;
                 Console.WriteLine($"{lParam.time} (d:{timeDiff}ms) {wParam} {(shouldBlock ? "BLOCKED" : "OK")}: x:{lParam.pt.x} y:{lParam.pt.y}");
                 if (shouldBlock)
                 {
@@ -59,12 +85,14 @@ namespace DoubleClickFix
             return CallNextHookEx(_hookPtr, nCode, wParam, lParam);
         }
 
+        #region Win32 API
         private enum HookType : int
         {
             WH_MOUSE_LL = 14
         }
 
-        private enum MouseMessages : int
+        // https://docs.microsoft.com/en-us/windows/win32/inputdev/mouse-input-notifications
+        private enum MouseInputNotification : int
         {
             WM_LBUTTONDOWN = 0x0201,
             WM_LBUTTONUP = 0x0202,
@@ -102,9 +130,10 @@ namespace DoubleClickFix
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode,
-            MouseMessages wParam, MSLLHOOKSTRUCT lParam);
+            MouseInputNotification wParam, MSLLHOOKSTRUCT lParam);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr GetModuleHandle(string lpModuleName);
+        #endregion
     }
 }
