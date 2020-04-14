@@ -9,6 +9,13 @@ namespace DoubleClickFix.Presenter
             View = view;
             View.Presenter = this;
             MouseEventBlocker = mouseEventBlocker;
+
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            View.Threshold = MouseEventBlocker.Threshold;
         }
 
         public IMainView View { get; }
@@ -19,12 +26,32 @@ namespace DoubleClickFix.Presenter
             MouseEventBlocker.Threshold = View.Threshold;
         }
 
-        internal void UpdateLeftButton()
+        public void UpdateLeftMouseButton()
         {
             if (View.LeftMouseButton)
-                MouseEventBlocker.Register(MouseEvent.LeftMouseButton);
+            {
+                MouseEventBlocker.Register(Win32.MouseInputNotification.WM_LBUTTONUP);
+                MouseEventBlocker.Register(Win32.MouseInputNotification.WM_LBUTTONDOWN);
+            }
             else
-                MouseEventBlocker.Unegister(MouseEvent.LeftMouseButton);
+            {
+                MouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_LBUTTONUP);
+                MouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_LBUTTONDOWN);
+            }
+        }
+
+        public void UpdateRightMouseButton()
+        {
+            if (View.RightMouseButton)
+            {
+                MouseEventBlocker.Register(Win32.MouseInputNotification.WM_RBUTTONUP);
+                MouseEventBlocker.Register(Win32.MouseInputNotification.WM_RBUTTONDOWN);
+            }
+            else
+            {
+                MouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_RBUTTONUP);
+                MouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_RBUTTONDOWN);
+            }
         }
     }
 }

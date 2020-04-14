@@ -4,9 +4,10 @@ namespace DoubleClickFix.View
 {
     public interface IMainView
     {
-        public bool LeftMouseButton { get; set; }
-        public uint Threshold { get; set; }
+        bool LeftMouseButton { get; set; }
+        bool RightMouseButton { get; set; }
+        uint Threshold { get; set; }
 
-        public MainPresenter Presenter { set; }
+        MainPresenter Presenter { set; }
     }
 }

@@ -17,7 +17,7 @@ namespace DoubleClickFix
             var mouseEventBlocker = new MouseEventBlocker();
             try
             {
-                //mouseEventBlocker.Hook();
+                mouseEventBlocker.Start();
 
                 var mainForm = new MainForm();
                 var mainPresenter = new MainPresenter(mainForm, mouseEventBlocker);
@@ -26,7 +26,7 @@ namespace DoubleClickFix
             }
             finally
             {
-                //mouseEventBlocker.Unhook();
+                mouseEventBlocker.Stop();
             }
         }
     }

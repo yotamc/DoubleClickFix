@@ -16,6 +16,13 @@ namespace DoubleClickFix.View
             get => leftMouseButtonCheckBox.Checked;
             set => leftMouseButtonCheckBox.Checked = value;
         }
+
+        public bool RightMouseButton
+        {
+            get => rightMouseButtonCheckBox.Checked;
+            set => rightMouseButtonCheckBox.Checked = value;
+        }
+
         public uint Threshold
         {
             get => (uint)thresholdNumericUpDown.Value;
@@ -30,7 +37,12 @@ namespace DoubleClickFix.View
 
         private void LeftMouseButtonCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            Presenter.UpdateLeftButton();
+            Presenter.UpdateLeftMouseButton();
+        }
+
+        private void RightMouseButtonCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Presenter.UpdateRightMouseButton();
         }
     }
 }
