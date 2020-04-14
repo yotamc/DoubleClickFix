@@ -83,14 +83,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(433, 343);
+            this.ClientSize = new System.Drawing.Size(433, 64);
             this.Controls.Add(this.thresholdLabel);
             this.Controls.Add(this.rightMouseButtonCheckBox);
             this.Controls.Add(this.thresholdNumericUpDown);
             this.Controls.Add(this.leftMouseButtonCheckBox);
             this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.Text = "MainForm";
+            this.Text = "DoubleClickFix";
             ((System.ComponentModel.ISupportInitialize)(this.thresholdNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
