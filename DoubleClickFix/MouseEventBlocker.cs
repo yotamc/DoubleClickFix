@@ -8,7 +8,7 @@ namespace DoubleClickFix
     {
         private Dictionary<Win32.MouseInputNotification, uint> _lastEventTimes = new Dictionary<Win32.MouseInputNotification, uint>();
         public IEnumerable<Win32.MouseInputNotification> Events => _lastEventTimes.Keys;
-        public uint Threshold { get; set; } = 125;
+        public uint Threshold { get; set; }
 
         private Win32.LowLevelMouseProc _proc;
         private IntPtr _hookPtr = IntPtr.Zero;

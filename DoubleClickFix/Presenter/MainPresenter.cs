@@ -1,29 +1,36 @@
 ﻿using DoubleClickFix.View;
+using Microsoft.Extensions.Configuration;
+using System;
 
 namespace DoubleClickFix.Presenter
 {
     public class MainPresenter
     {
-        public MainPresenter(IMainView view, MouseEventBlocker mouseEventBlocker)
+        public MainPresenter(IMainView view, MouseEventBlocker mouseEventBlocker, IConfiguration configuration)
         {
             View = view;
             View.Presenter = this;
             MouseEventBlocker = mouseEventBlocker;
-
+            Configuration = configuration;
             Initialize();
         }
 
         private void Initialize()
         {
-            View.Threshold = MouseEventBlocker.Threshold;
+            View.Threshold = Convert.ToUInt32(Configuration[nameof(View.Threshold)]);
+            View.LeftMouseButton = Convert.ToBoolean(Configuration[nameof(View.LeftMouseButton)]);
+            View.RightMouseButton = Convert.ToBoolean(Configuration[nameof(View.RightMouseButton)]);
         }
 
         public IMainView View { get; }
         public MouseEventBlocker MouseEventBlocker { get; }
+        public IConfiguration Configuration { get; }
 
         public void UpdateThreshold()
         {
             MouseEventBlocker.Threshold = View.Threshold;
+
+            Configuration[nameof(View.Threshold)] = View.Threshold.ToString();
         }
 
         public void UpdateLeftMouseButton()
@@ -38,6 +45,8 @@ namespace DoubleClickFix.Presenter
                 MouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_LBUTTONUP);
                 MouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_LBUTTONDOWN);
             }
+
+            Configuration[nameof(View.LeftMouseButton)] = View.LeftMouseButton.ToString();
         }
 
         public void UpdateRightMouseButton()
@@ -52,6 +61,8 @@ namespace DoubleClickFix.Presenter
                 MouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_RBUTTONUP);
                 MouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_RBUTTONDOWN);
             }
+
+            Configuration[nameof(View.RightMouseButton)] = View.RightMouseButton.ToString();
         }
     }
 }
