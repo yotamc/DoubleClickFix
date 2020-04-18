@@ -34,9 +34,9 @@
             this.thresholdLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.thresholdNumericUpDown)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // leftMouseButtonCheckBox
-            // 
+            //
             this.leftMouseButtonCheckBox.AutoSize = true;
             this.leftMouseButtonCheckBox.Location = new System.Drawing.Point(12, 12);
             this.leftMouseButtonCheckBox.Name = "leftMouseButtonCheckBox";
@@ -45,9 +45,10 @@
             this.leftMouseButtonCheckBox.Text = "Left Mouse Button";
             this.leftMouseButtonCheckBox.UseVisualStyleBackColor = true;
             this.leftMouseButtonCheckBox.CheckedChanged += new System.EventHandler(this.LeftMouseButtonCheckBox_CheckedChanged);
-            // 
+            //
             // thresholdNumericUpDown
-            // 
+            //
+            this.thresholdNumericUpDown.Increment = 5;
             this.thresholdNumericUpDown.Location = new System.Drawing.Point(354, 11);
             this.thresholdNumericUpDown.Maximum = new decimal(new int[] {
             1000,
@@ -58,9 +59,9 @@
             this.thresholdNumericUpDown.Size = new System.Drawing.Size(67, 23);
             this.thresholdNumericUpDown.TabIndex = 1;
             this.thresholdNumericUpDown.ValueChanged += new System.EventHandler(this.ThresholdNumericUpDown_ValueChanged);
-            // 
+            //
             // rightMouseButtonCheckBox
-            // 
+            //
             this.rightMouseButtonCheckBox.AutoSize = true;
             this.rightMouseButtonCheckBox.Location = new System.Drawing.Point(12, 37);
             this.rightMouseButtonCheckBox.Name = "rightMouseButtonCheckBox";
@@ -69,18 +70,18 @@
             this.rightMouseButtonCheckBox.Text = "Right Mouse Button";
             this.rightMouseButtonCheckBox.UseVisualStyleBackColor = true;
             this.rightMouseButtonCheckBox.CheckedChanged += new System.EventHandler(this.RightMouseButtonCheckBox_CheckedChanged);
-            // 
+            //
             // thresholdLabel
-            // 
+            //
             this.thresholdLabel.AutoSize = true;
-            this.thresholdLabel.Location = new System.Drawing.Point(286, 13);
+            this.thresholdLabel.Location = new System.Drawing.Point(259, 13);
             this.thresholdLabel.Name = "thresholdLabel";
-            this.thresholdLabel.Size = new System.Drawing.Size(62, 15);
+            this.thresholdLabel.Size = new System.Drawing.Size(89, 15);
             this.thresholdLabel.TabIndex = 2;
-            this.thresholdLabel.Text = "Threshold:";
-            // 
+            this.thresholdLabel.Text = "Threshold (ms):";
+            //
             // MainForm
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(433, 64);
