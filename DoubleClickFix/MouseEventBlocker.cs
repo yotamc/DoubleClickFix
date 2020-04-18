@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace DoubleClickFix
 {
@@ -35,7 +36,7 @@ namespace DoubleClickFix
 
             _hookPtr = Win32.SetWindowsHookEx(Win32.HookType.WH_MOUSE_LL, _proc, Win32.GetModuleHandle("user32"), 0);
             if (_hookPtr == IntPtr.Zero)
-                throw new Win32Exception();
+                throw new Win32Exception(Marshal.GetLastWin32Error());
         }
 
         public void Stop()
