@@ -6,4 +6,4 @@ This program eliminates unwanted mouse double clicks by blocking similar low-lev
 
 - Faulty mouse
 - Windows OS
-- .NET Core 3.1/.NET 5.0
+- .NET Core 3.1
