@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/DoubleClickFix/bin/Debug/net5.0/DoubleClickFix.dll",
+            "program": "${workspaceFolder}/DoubleClickFix/bin/Debug/netcoreapp3.1/DoubleClickFix.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/DoubleClickFix/bin/Debug/net5.0",
+            "cwd": "${workspaceFolder}/DoubleClickFix/bin/Debug/netcoreapp3.1",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false
