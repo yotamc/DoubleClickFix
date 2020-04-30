@@ -28,10 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.leftMouseButtonCheckBox = new System.Windows.Forms.CheckBox();
             this.thresholdNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.rightMouseButtonCheckBox = new System.Windows.Forms.CheckBox();
             this.thresholdLabel = new System.Windows.Forms.Label();
+            this.trayNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.thresholdNumericUpDown)).BeginInit();
             this.SuspendLayout();
             //
@@ -80,6 +83,13 @@
             this.thresholdLabel.TabIndex = 2;
             this.thresholdLabel.Text = "Threshold (ms):";
             //
+            // trayNotifyIcon
+            //
+            this.trayNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayNotifyIcon.Icon")));
+            this.trayNotifyIcon.Text = "DoubleClickFix";
+            this.trayNotifyIcon.Visible = true;
+            this.trayNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TrayNotifyIcon_MouseDoubleClick);
+            //
             // MainForm
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -89,9 +99,12 @@
             this.Controls.Add(this.rightMouseButtonCheckBox);
             this.Controls.Add(this.thresholdNumericUpDown);
             this.Controls.Add(this.leftMouseButtonCheckBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "DoubleClickFix";
+            this.Resize += new System.EventHandler(this.MainForm_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.thresholdNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -104,5 +117,6 @@
         private System.Windows.Forms.NumericUpDown thresholdNumericUpDown;
         private System.Windows.Forms.CheckBox rightMouseButtonCheckBox;
         private System.Windows.Forms.Label thresholdLabel;
+        private System.Windows.Forms.NotifyIcon trayNotifyIcon;
     }
 }
