@@ -35,15 +35,11 @@
             this.rightMouseButtonCheckBox = new System.Windows.Forms.CheckBox();
             this.thresholdLabel = new System.Windows.Forms.Label();
             this.trayNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.notifyContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.thresholdNumericUpDown)).BeginInit();
-            this.notifyContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // leftMouseButtonCheckBox
-            // 
+            //
             this.leftMouseButtonCheckBox.AutoSize = true;
             this.leftMouseButtonCheckBox.Location = new System.Drawing.Point(12, 12);
             this.leftMouseButtonCheckBox.Name = "leftMouseButtonCheckBox";
@@ -52,9 +48,9 @@
             this.leftMouseButtonCheckBox.Text = "Left Mouse Button";
             this.leftMouseButtonCheckBox.UseVisualStyleBackColor = true;
             this.leftMouseButtonCheckBox.CheckedChanged += new System.EventHandler(this.LeftMouseButtonCheckBox_CheckedChanged);
-            // 
+            //
             // thresholdNumericUpDown
-            // 
+            //
             this.thresholdNumericUpDown.Increment = 5;
             this.thresholdNumericUpDown.Location = new System.Drawing.Point(354, 11);
             this.thresholdNumericUpDown.Maximum = new decimal(new int[] {
@@ -66,9 +62,9 @@
             this.thresholdNumericUpDown.Size = new System.Drawing.Size(67, 23);
             this.thresholdNumericUpDown.TabIndex = 1;
             this.thresholdNumericUpDown.ValueChanged += new System.EventHandler(this.ThresholdNumericUpDown_ValueChanged);
-            // 
+            //
             // rightMouseButtonCheckBox
-            // 
+            //
             this.rightMouseButtonCheckBox.AutoSize = true;
             this.rightMouseButtonCheckBox.Location = new System.Drawing.Point(12, 37);
             this.rightMouseButtonCheckBox.Name = "rightMouseButtonCheckBox";
@@ -77,47 +73,25 @@
             this.rightMouseButtonCheckBox.Text = "Right Mouse Button";
             this.rightMouseButtonCheckBox.UseVisualStyleBackColor = true;
             this.rightMouseButtonCheckBox.CheckedChanged += new System.EventHandler(this.RightMouseButtonCheckBox_CheckedChanged);
-            // 
+            //
             // thresholdLabel
-            // 
+            //
             this.thresholdLabel.AutoSize = true;
             this.thresholdLabel.Location = new System.Drawing.Point(259, 13);
             this.thresholdLabel.Name = "thresholdLabel";
             this.thresholdLabel.Size = new System.Drawing.Size(89, 15);
             this.thresholdLabel.TabIndex = 2;
             this.thresholdLabel.Text = "Threshold (ms):";
-            // 
+            //
             // trayNotifyIcon
-            // 
-            this.trayNotifyIcon.ContextMenuStrip = this.notifyContextMenuStrip;
+            //
             this.trayNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayNotifyIcon.Icon")));
             this.trayNotifyIcon.Text = "DoubleClickFix";
             this.trayNotifyIcon.Visible = true;
-            // 
-            // notifyContextMenuStrip
-            // 
-            this.notifyContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.settingsToolStripMenuItem,
-            this.exitToolStripMenuItem});
-            this.notifyContextMenuStrip.Name = "notifyContextMenuStrip";
-            this.notifyContextMenuStrip.Size = new System.Drawing.Size(117, 48);
-            // 
-            // settingsToolStripMenuItem
-            // 
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
-            // 
+            this.trayNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TrayNotifyIcon_MouseDoubleClick);
+            //
             // MainForm
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(433, 64);
@@ -125,12 +99,13 @@
             this.Controls.Add(this.rightMouseButtonCheckBox);
             this.Controls.Add(this.thresholdNumericUpDown);
             this.Controls.Add(this.leftMouseButtonCheckBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "DoubleClickFix";
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.thresholdNumericUpDown)).EndInit();
-            this.notifyContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -143,8 +118,5 @@
         private System.Windows.Forms.CheckBox rightMouseButtonCheckBox;
         private System.Windows.Forms.Label thresholdLabel;
         private System.Windows.Forms.NotifyIcon trayNotifyIcon;
-        private System.Windows.Forms.ContextMenuStrip notifyContextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
     }
 }
