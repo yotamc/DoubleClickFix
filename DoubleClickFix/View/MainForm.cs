@@ -35,6 +35,12 @@ namespace DoubleClickFix.View
             set => thresholdLabel.Text = value;
         }
 
+        public string BlockStatusLabel
+        {
+            get => blockedToolStripStatusLabel.Text;
+            set => blockedToolStripStatusLabel.Text = value;
+        }
+
         public MainPresenter Presenter { private get; set; }
 
         private void ThresholdTrackBar_ValueChanged(object sender, EventArgs e)
@@ -58,7 +64,7 @@ namespace DoubleClickFix.View
                 Hide();
         }
 
-        private void TrayNotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void TrayNotifyIcon_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             Show();
             WindowState = FormWindowState.Normal;

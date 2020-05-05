@@ -6,6 +6,8 @@ namespace DoubleClickFix.Presenter
 {
     public class MainPresenter
     {
+        private int _blockCount = 0;
+
         public MainPresenter(IMainView view, MouseEventBlocker mouseEventBlocker, IConfiguration configuration)
         {
             View = view;
@@ -20,6 +22,20 @@ namespace DoubleClickFix.Presenter
             View.Threshold = Convert.ToInt32(Configuration[nameof(View.Threshold)]);
             View.LeftMouseButton = Convert.ToBoolean(Configuration[nameof(View.LeftMouseButton)]);
             View.RightMouseButton = Convert.ToBoolean(Configuration[nameof(View.RightMouseButton)]);
+
+            MouseEventBlocker.EventHandled += MouseEventBlocker_EventHandled;
+            UpdateBlockStatusLabel();
+        }
+
+        private void MouseEventBlocker_EventHandled(object sender, MouseEventArgs e)
+        {
+            if (e.IsBlocked)
+            {
+                _blockCount++;
+                UpdateBlockStatusLabel();
+            }
+
+            //TODO add to debug textbox
         }
 
         public IMainView View { get; }
@@ -65,6 +81,11 @@ namespace DoubleClickFix.Presenter
             }
 
             Configuration[nameof(View.RightMouseButton)] = View.RightMouseButton.ToString();
+        }
+
+        public void UpdateBlockStatusLabel()
+        {
+            View.BlockStatusLabel = $"Blocked events: {_blockCount}";
         }
     }
 }

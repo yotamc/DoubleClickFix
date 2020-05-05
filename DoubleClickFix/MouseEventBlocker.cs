@@ -5,14 +5,16 @@ using System.Runtime.InteropServices;
 
 namespace DoubleClickFix
 {
-    public class MouseEventBlocker : IEventBlocker<Win32.MouseInputNotification>
+    public class MouseEventBlocker
     {
-        private Dictionary<Win32.MouseInputNotification, uint> _lastEventTimes = new Dictionary<Win32.MouseInputNotification, uint>();
+        private readonly Dictionary<Win32.MouseInputNotification, uint> _lastEventTimes = new Dictionary<Win32.MouseInputNotification, uint>();
         public IEnumerable<Win32.MouseInputNotification> Events => _lastEventTimes.Keys;
         public uint Threshold { get; set; }
 
-        private Win32.LowLevelMouseProc _proc;
+        private readonly Win32.LowLevelMouseProc _proc;
         private IntPtr _hookPtr = IntPtr.Zero;
+
+        public event EventHandler<MouseEventArgs> EventHandled;
 
         public MouseEventBlocker()
         {
@@ -48,13 +50,28 @@ namespace DoubleClickFix
             _hookPtr = IntPtr.Zero;
         }
 
+        protected virtual void OnEventHandled(MouseEventArgs e)
+        {
+            EventHandled?.Invoke(this, e);
+        }
+
         private IntPtr HookCallback(int nCode, Win32.MouseInputNotification wParam, Win32.MSLLHOOKSTRUCT lParam)
         {
             if (nCode >= 0 && _lastEventTimes.ContainsKey(wParam))
             {
                 var timeDiff = lParam.time - _lastEventTimes[wParam];
                 var shouldBlock = timeDiff < Threshold;
-                Console.WriteLine($"{lParam.time} (d:{timeDiff}ms) {wParam} {(shouldBlock ? "BLOCKED" : "OK")}: x:{lParam.pt.x} y:{lParam.pt.y}");
+                
+                OnEventHandled(new MouseEventArgs
+                {
+                    Timestamp = lParam.time,
+                    TimeDiff = timeDiff,
+                    MouseEvent = wParam,
+                    IsBlocked = shouldBlock,
+                    X = lParam.pt.x,
+                    Y = lParam.pt.y
+                });
+
                 if (shouldBlock)
                 {
                     return new IntPtr(1);

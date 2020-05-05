@@ -8,6 +8,7 @@ namespace DoubleClickFix.View
         bool RightMouseButton { get; set; }
         int Threshold { get; set; }
         string ThresholdLabel { get; set; }
+        string BlockStatusLabel { get; set; }
 
         MainPresenter Presenter { set; }
     }
