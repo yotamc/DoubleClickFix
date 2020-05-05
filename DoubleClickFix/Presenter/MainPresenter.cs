@@ -1,12 +1,15 @@
 ﻿using DoubleClickFix.View;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 
 namespace DoubleClickFix.Presenter
 {
     public class MainPresenter
     {
+        private const int DebugLogMaxLines = 50;
         private int _blockCount = 0;
+        private readonly List<string> _debugLog = new List<string>(DebugLogMaxLines);
 
         public MainPresenter(IMainView view, MouseEventBlocker mouseEventBlocker, IConfiguration configuration)
         {
@@ -25,6 +28,7 @@ namespace DoubleClickFix.Presenter
 
             MouseEventBlocker.EventHandled += MouseEventBlocker_EventHandled;
             UpdateBlockStatusLabel();
+            View.IsDebugging = false;
         }
 
         private void MouseEventBlocker_EventHandled(object sender, MouseEventArgs e)
@@ -35,7 +39,19 @@ namespace DoubleClickFix.Presenter
                 UpdateBlockStatusLabel();
             }
 
-            //TODO add to debug textbox
+            _debugLog.Add($"{e.Timestamp} (d:{e.TimeDiff}ms) {e.MouseEvent} {(e.IsBlocked ? "BLOCKED" : "OK")}: x:{e.X} y:{e.Y}");
+            UpdateDebugLog();
+        }
+
+        private void UpdateDebugLog()
+        {
+            if (_debugLog.Count > DebugLogMaxLines)
+            {
+                var excess = _debugLog.Count - DebugLogMaxLines;
+                _debugLog.RemoveRange(0, excess);
+            }
+
+            View.DebugLog = _debugLog.ToArray();
         }
 
         public IMainView View { get; }

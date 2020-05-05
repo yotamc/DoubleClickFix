@@ -34,15 +34,15 @@
             this.rightMouseButtonCheckBox = new System.Windows.Forms.CheckBox();
             this.thresholdLabel = new System.Windows.Forms.Label();
             this.trayNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.statsCheckBox = new System.Windows.Forms.CheckBox();
+            this.debugCheckBox = new System.Windows.Forms.CheckBox();
             this.thresholdTrackBar = new System.Windows.Forms.TrackBar();
             this.statsStatusStrip = new System.Windows.Forms.StatusStrip();
             this.blockedToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statsPanel = new System.Windows.Forms.Panel();
-            this.statsTextBox = new System.Windows.Forms.TextBox();
+            this.debugPanel = new System.Windows.Forms.Panel();
+            this.debugTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.thresholdTrackBar)).BeginInit();
             this.statsStatusStrip.SuspendLayout();
-            this.statsPanel.SuspendLayout();
+            this.debugPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // leftMouseButtonCheckBox
@@ -83,17 +83,19 @@
             this.trayNotifyIcon.Visible = true;
             this.trayNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TrayNotifyIcon_MouseDoubleClick);
             // 
-            // statsCheckBox
+            // debugCheckBox
             // 
-            this.statsCheckBox.Appearance = System.Windows.Forms.Appearance.Button;
-            this.statsCheckBox.AutoSize = true;
-            this.statsCheckBox.Location = new System.Drawing.Point(395, 33);
-            this.statsCheckBox.Name = "statsCheckBox";
-            this.statsCheckBox.Size = new System.Drawing.Size(27, 25);
-            this.statsCheckBox.TabIndex = 3;
-            this.statsCheckBox.Text = "▼";
-            this.statsCheckBox.UseVisualStyleBackColor = true;
-            this.statsCheckBox.CheckedChanged += new System.EventHandler(this.StatsCheckBox_CheckedChanged);
+            this.debugCheckBox.Appearance = System.Windows.Forms.Appearance.Button;
+            this.debugCheckBox.AutoSize = true;
+            this.debugCheckBox.Checked = true;
+            this.debugCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.debugCheckBox.Location = new System.Drawing.Point(395, 33);
+            this.debugCheckBox.Name = "debugCheckBox";
+            this.debugCheckBox.Size = new System.Drawing.Size(27, 25);
+            this.debugCheckBox.TabIndex = 3;
+            this.debugCheckBox.Text = "▼";
+            this.debugCheckBox.UseVisualStyleBackColor = true;
+            this.debugCheckBox.CheckedChanged += new System.EventHandler(this.DebugCheckBox_CheckedChanged);
             // 
             // thresholdTrackBar
             // 
@@ -120,31 +122,34 @@
             this.blockedToolStripStatusLabel.Size = new System.Drawing.Size(155, 17);
             this.blockedToolStripStatusLabel.Text = "blockedToolStripStatusLabel";
             // 
-            // statsPanel
+            // debugPanel
             // 
-            this.statsPanel.Controls.Add(this.statsTextBox);
-            this.statsPanel.Location = new System.Drawing.Point(12, 64);
-            this.statsPanel.Name = "statsPanel";
-            this.statsPanel.Size = new System.Drawing.Size(409, 236);
-            this.statsPanel.TabIndex = 6;
+            this.debugPanel.Controls.Add(this.debugTextBox);
+            this.debugPanel.Location = new System.Drawing.Point(12, 64);
+            this.debugPanel.Name = "debugPanel";
+            this.debugPanel.Size = new System.Drawing.Size(409, 236);
+            this.debugPanel.TabIndex = 6;
             // 
-            // statsTextBox
+            // debugTextBox
             // 
-            this.statsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.statsTextBox.Location = new System.Drawing.Point(0, 0);
-            this.statsTextBox.Multiline = true;
-            this.statsTextBox.Name = "statsTextBox";
-            this.statsTextBox.Size = new System.Drawing.Size(409, 236);
-            this.statsTextBox.TabIndex = 0;
+            this.debugTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.debugTextBox.Location = new System.Drawing.Point(0, 0);
+            this.debugTextBox.Multiline = true;
+            this.debugTextBox.Name = "debugTextBox";
+            this.debugTextBox.ReadOnly = true;
+            this.debugTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.debugTextBox.Size = new System.Drawing.Size(409, 236);
+            this.debugTextBox.TabIndex = 0;
+            this.debugTextBox.TextChanged += new System.EventHandler(this.DebugTextBox_TextChanged);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(433, 325);
-            this.Controls.Add(this.statsPanel);
+            this.Controls.Add(this.debugPanel);
             this.Controls.Add(this.statsStatusStrip);
-            this.Controls.Add(this.statsCheckBox);
+            this.Controls.Add(this.debugCheckBox);
             this.Controls.Add(this.thresholdLabel);
             this.Controls.Add(this.rightMouseButtonCheckBox);
             this.Controls.Add(this.leftMouseButtonCheckBox);
@@ -158,8 +163,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.thresholdTrackBar)).EndInit();
             this.statsStatusStrip.ResumeLayout(false);
             this.statsStatusStrip.PerformLayout();
-            this.statsPanel.ResumeLayout(false);
-            this.statsPanel.PerformLayout();
+            this.debugPanel.ResumeLayout(false);
+            this.debugPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -171,11 +176,11 @@
         private System.Windows.Forms.CheckBox rightMouseButtonCheckBox;
         private System.Windows.Forms.Label thresholdLabel;
         private System.Windows.Forms.NotifyIcon trayNotifyIcon;
-        private System.Windows.Forms.CheckBox statsCheckBox;
+        private System.Windows.Forms.CheckBox debugCheckBox;
         private System.Windows.Forms.TrackBar thresholdTrackBar;
         private System.Windows.Forms.StatusStrip statsStatusStrip;
         private System.Windows.Forms.ToolStripStatusLabel blockedToolStripStatusLabel;
-        private System.Windows.Forms.Panel statsPanel;
-        private System.Windows.Forms.TextBox statsTextBox;
+        private System.Windows.Forms.Panel debugPanel;
+        private System.Windows.Forms.TextBox debugTextBox;
     }
 }

@@ -9,6 +9,8 @@ namespace DoubleClickFix.View
         int Threshold { get; set; }
         string ThresholdLabel { get; set; }
         string BlockStatusLabel { get; set; }
+        string[] DebugLog { get; set; }
+        bool IsDebugging { get; set; }
 
         MainPresenter Presenter { set; }
     }

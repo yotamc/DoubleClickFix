@@ -41,6 +41,18 @@ namespace DoubleClickFix.View
             set => blockedToolStripStatusLabel.Text = value;
         }
 
+        public string[] DebugLog
+        {
+            get => debugTextBox.Lines;
+            set => debugTextBox.Lines = value;
+        }
+
+        public bool IsDebugging
+        {
+            get => debugCheckBox.Checked;
+            set => debugCheckBox.Checked = value;
+        }
+
         public MainPresenter Presenter { private get; set; }
 
         private void ThresholdTrackBar_ValueChanged(object sender, EventArgs e)
@@ -70,10 +82,17 @@ namespace DoubleClickFix.View
             WindowState = FormWindowState.Normal;
         }
 
-        private void StatsCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void DebugCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            statsPanel.Visible = !statsPanel.Visible;
-            Height += (statsPanel.Visible ? 1 : -1) * statsPanel.Height;
+            var visible = debugCheckBox.Checked;
+            debugPanel.Visible = visible;
+            Height += (visible ? 1 : -1) * debugPanel.Height;
+        }
+
+        private void DebugTextBox_TextChanged(object sender, EventArgs e)
+        {
+            debugTextBox.SelectionStart = debugTextBox.Text.Length;
+            debugTextBox.ScrollToCaret();
         }
     }
 }
