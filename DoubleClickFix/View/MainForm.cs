@@ -23,14 +23,21 @@ namespace DoubleClickFix.View
             set => rightMouseButtonCheckBox.Checked = value;
         }
 
-        public uint Threshold
+        public int Threshold
         {
-            get => (uint)thresholdNumericUpDown.Value;
-            set => thresholdNumericUpDown.Value = value;
+            get => thresholdTrackBar.Value;
+            set => thresholdTrackBar.Value = value;
         }
+
+        public string ThresholdLabel
+        {
+            get => thresholdLabel.Text;
+            set => thresholdLabel.Text = value;
+        }
+
         public MainPresenter Presenter { private get; set; }
 
-        private void ThresholdNumericUpDown_ValueChanged(object sender, EventArgs e)
+        private void ThresholdTrackBar_ValueChanged(object sender, EventArgs e)
         {
             Presenter.UpdateThreshold();
         }
@@ -55,6 +62,12 @@ namespace DoubleClickFix.View
         {
             Show();
             WindowState = FormWindowState.Normal;
+        }
+
+        private void StatsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            statsPanel.Visible = !statsPanel.Visible;
+            Height += (statsPanel.Visible ? 1 : -1) * statsPanel.Height;
         }
     }
 }

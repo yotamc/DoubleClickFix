@@ -17,7 +17,7 @@ namespace DoubleClickFix.Presenter
 
         private void Initialize()
         {
-            View.Threshold = Convert.ToUInt32(Configuration[nameof(View.Threshold)]);
+            View.Threshold = Convert.ToInt32(Configuration[nameof(View.Threshold)]);
             View.LeftMouseButton = Convert.ToBoolean(Configuration[nameof(View.LeftMouseButton)]);
             View.RightMouseButton = Convert.ToBoolean(Configuration[nameof(View.RightMouseButton)]);
         }
@@ -28,7 +28,9 @@ namespace DoubleClickFix.Presenter
 
         public void UpdateThreshold()
         {
-            MouseEventBlocker.Threshold = View.Threshold;
+            MouseEventBlocker.Threshold = (uint)View.Threshold;
+
+            View.ThresholdLabel = $"Threshold ({View.Threshold}ms)";
 
             Configuration[nameof(View.Threshold)] = View.Threshold.ToString();
         }
