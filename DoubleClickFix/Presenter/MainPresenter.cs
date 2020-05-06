@@ -39,7 +39,7 @@ namespace DoubleClickFix.Presenter
                 UpdateBlockStatusLabel();
             }
 
-            _debugLog.Add($"{e.Timestamp} (d:{e.TimeDiff}ms) {e.MouseEvent} {(e.IsBlocked ? "BLOCKED" : "OK")}: x:{e.X} y:{e.Y}");
+            _debugLog.Add($"{e.Timestamp} (d:{e.TimeDiff}ms) X:{e.X} Y:{e.Y} {e.MouseEvent} {(e.IsBlocked ? "BLOCKED" : "OK")}");
             UpdateDebugLog();
         }
 

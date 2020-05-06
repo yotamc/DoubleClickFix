@@ -86,14 +86,14 @@
             // debugCheckBox
             // 
             this.debugCheckBox.Appearance = System.Windows.Forms.Appearance.Button;
-            this.debugCheckBox.AutoSize = true;
             this.debugCheckBox.Checked = true;
             this.debugCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.debugCheckBox.Location = new System.Drawing.Point(395, 33);
             this.debugCheckBox.Name = "debugCheckBox";
-            this.debugCheckBox.Size = new System.Drawing.Size(27, 25);
+            this.debugCheckBox.Size = new System.Drawing.Size(25, 25);
             this.debugCheckBox.TabIndex = 3;
-            this.debugCheckBox.Text = "▼";
+            this.debugCheckBox.Text = "🔍";
+            this.debugCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.debugCheckBox.UseVisualStyleBackColor = true;
             this.debugCheckBox.CheckedChanged += new System.EventHandler(this.DebugCheckBox_CheckedChanged);
             // 
