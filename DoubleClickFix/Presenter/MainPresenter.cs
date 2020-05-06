@@ -1,11 +1,16 @@
 ﻿using DoubleClickFix.View;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 
 namespace DoubleClickFix.Presenter
 {
     public class MainPresenter
     {
+        private const int DebugLogMaxLines = 50;
+        private int _blockCount = 0;
+        private readonly List<string> _debugLog = new List<string>(DebugLogMaxLines);
+
         public MainPresenter(IMainView view, MouseEventBlocker mouseEventBlocker, IConfiguration configuration)
         {
             View = view;
@@ -17,9 +22,36 @@ namespace DoubleClickFix.Presenter
 
         private void Initialize()
         {
-            View.Threshold = Convert.ToUInt32(Configuration[nameof(View.Threshold)]);
+            View.Threshold = Convert.ToInt32(Configuration[nameof(View.Threshold)]);
             View.LeftMouseButton = Convert.ToBoolean(Configuration[nameof(View.LeftMouseButton)]);
             View.RightMouseButton = Convert.ToBoolean(Configuration[nameof(View.RightMouseButton)]);
+
+            MouseEventBlocker.EventHandled += MouseEventBlocker_EventHandled;
+            UpdateBlockStatusLabel();
+            View.IsDebugging = false;
+        }
+
+        private void MouseEventBlocker_EventHandled(object sender, MouseEventArgs e)
+        {
+            if (e.IsBlocked)
+            {
+                _blockCount++;
+                UpdateBlockStatusLabel();
+            }
+
+            _debugLog.Add($"{e.Timestamp} (d:{e.TimeDiff}ms) X:{e.X} Y:{e.Y} {e.MouseEvent} {(e.IsBlocked ? "BLOCKED" : "OK")}");
+            UpdateDebugLog();
+        }
+
+        private void UpdateDebugLog()
+        {
+            if (_debugLog.Count > DebugLogMaxLines)
+            {
+                var excess = _debugLog.Count - DebugLogMaxLines;
+                _debugLog.RemoveRange(0, excess);
+            }
+
+            View.DebugLog = _debugLog.ToArray();
         }
 
         public IMainView View { get; }
@@ -28,7 +60,9 @@ namespace DoubleClickFix.Presenter
 
         public void UpdateThreshold()
         {
-            MouseEventBlocker.Threshold = View.Threshold;
+            MouseEventBlocker.Threshold = (uint)View.Threshold;
+
+            View.ThresholdLabel = $"Threshold ({View.Threshold}ms)";
 
             Configuration[nameof(View.Threshold)] = View.Threshold.ToString();
         }
@@ -63,6 +97,11 @@ namespace DoubleClickFix.Presenter
             }
 
             Configuration[nameof(View.RightMouseButton)] = View.RightMouseButton.ToString();
+        }
+
+        public void UpdateBlockStatusLabel()
+        {
+            View.BlockStatusLabel = $"Blocked events: {_blockCount}";
         }
     }
 }

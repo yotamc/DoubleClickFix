@@ -7,13 +7,13 @@ namespace DoubleClickFix
     {
         public delegate IntPtr LowLevelMouseProc(int nCode, MouseInputNotification wParam, MSLLHOOKSTRUCT lParam);
 
-        public enum HookType : int
+        public enum HookType
         {
             WH_MOUSE_LL = 14
         }
 
         // https://docs.microsoft.com/en-us/windows/win32/inputdev/mouse-input-notifications
-        public enum MouseInputNotification : int
+        public enum MouseInputNotification
         {
             WM_LBUTTONDOWN = 0x0201,
             WM_LBUTTONUP = 0x0202,
