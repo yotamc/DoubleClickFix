@@ -24,7 +24,7 @@ using System.IO;
 
 namespace DoubleClickFix.Configuration
 {
-    // https://stackoverflow.com/questions/57978535/save-changes-of-iconfigurationroot-sections-to-its-json-file-in-net-core-2-2
+    // https://stackoverflow.com/a/57990271
     public class WritableJsonConfigurationProvider : JsonConfigurationProvider
     {
         public WritableJsonConfigurationProvider(WritableJsonConfigurationSource source) : base(source)
