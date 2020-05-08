@@ -1,4 +1,5 @@
-﻿// Copyright (C) 2020 Yotam Cohen
+﻿extensions: .cs
+// Copyright (C) 2020 Yotam Cohen
 //
 // This file is part of DoubleClickFix.
 //
@@ -14,16 +15,3 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with DoubleClickFix.  If not, see <http://www.gnu.org/licenses/>.
-
-namespace DoubleClickFix
-{
-    public class MouseEventArgs
-    {
-        public bool IsBlocked { get; set; }
-        public uint Timestamp { get; set; }
-        public uint TimeDiff { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-        public Win32.MouseInputNotification MouseEvent { get; set; }
-    }
-}
