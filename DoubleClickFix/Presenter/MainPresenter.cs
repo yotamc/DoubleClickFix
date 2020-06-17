@@ -15,37 +15,40 @@
 // You should have received a copy of the GNU General Public License
 // along with DoubleClickFix.  If not, see <http://www.gnu.org/licenses/>.
 
+using DoubleClickFix.Options;
 using DoubleClickFix.View;
-using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
 
 namespace DoubleClickFix.Presenter
 {
     public class MainPresenter
     {
+        private readonly IMainView _view;
+        private readonly MouseEventBlocker _mouseEventBlocker;
+        private readonly IWritableOptions<AppSettings> _options;
+
         private const int DebugLogMaxLines = 50;
         private int _blockCount = 0;
         private readonly List<string> _debugLog = new List<string>(DebugLogMaxLines);
 
-        public MainPresenter(IMainView view, MouseEventBlocker mouseEventBlocker, IConfiguration configuration)
+        public MainPresenter(IMainView view, MouseEventBlocker mouseEventBlocker, IWritableOptions<AppSettings> options)
         {
-            View = view;
-            View.Presenter = this;
-            MouseEventBlocker = mouseEventBlocker;
-            Configuration = configuration;
+            _view = view;
+            _view.Presenter = this;
+            _mouseEventBlocker = mouseEventBlocker;
+            _options = options;
             Initialize();
         }
 
         private void Initialize()
         {
-            View.Threshold = Convert.ToInt32(Configuration[nameof(View.Threshold)]);
-            View.LeftMouseButton = Convert.ToBoolean(Configuration[nameof(View.LeftMouseButton)]);
-            View.RightMouseButton = Convert.ToBoolean(Configuration[nameof(View.RightMouseButton)]);
+            _view.Threshold = _options.Value.Threshold;
+            _view.LeftMouseButton = _options.Value.LeftMouseButton;
+            _view.RightMouseButton = _options.Value.RightMouseButton;
 
-            MouseEventBlocker.EventHandled += MouseEventBlocker_EventHandled;
+            _mouseEventBlocker.EventHandled += MouseEventBlocker_EventHandled;
             UpdateBlockStatusLabel();
-            View.IsDebugging = false;
+            _view.IsDebugging = false;
         }
 
         private void MouseEventBlocker_EventHandled(object sender, MouseEventArgs e)
@@ -68,57 +71,53 @@ namespace DoubleClickFix.Presenter
                 _debugLog.RemoveRange(0, excess);
             }
 
-            View.DebugLog = _debugLog.ToArray();
+            _view.DebugLog = _debugLog.ToArray();
         }
-
-        public IMainView View { get; }
-        public MouseEventBlocker MouseEventBlocker { get; }
-        public IConfiguration Configuration { get; }
 
         public void UpdateThreshold()
         {
-            MouseEventBlocker.Threshold = (uint)View.Threshold;
+            _mouseEventBlocker.Threshold = (uint)_view.Threshold;
 
-            View.ThresholdLabel = $"Threshold ({View.Threshold}ms)";
+            _view.ThresholdLabel = $"Threshold ({_view.Threshold}ms)";
 
-            Configuration[nameof(View.Threshold)] = View.Threshold.ToString();
+            _options.Update(o => o.Threshold = _view.Threshold);
         }
 
         public void UpdateLeftMouseButton()
         {
-            if (View.LeftMouseButton)
+            if (_view.LeftMouseButton)
             {
-                MouseEventBlocker.Register(Win32.MouseInputNotification.WM_LBUTTONUP);
-                MouseEventBlocker.Register(Win32.MouseInputNotification.WM_LBUTTONDOWN);
+                _mouseEventBlocker.Register(Win32.MouseInputNotification.WM_LBUTTONUP);
+                _mouseEventBlocker.Register(Win32.MouseInputNotification.WM_LBUTTONDOWN);
             }
             else
             {
-                MouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_LBUTTONUP);
-                MouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_LBUTTONDOWN);
+                _mouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_LBUTTONUP);
+                _mouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_LBUTTONDOWN);
             }
 
-            Configuration[nameof(View.LeftMouseButton)] = View.LeftMouseButton.ToString();
+            _options.Update(o => o.LeftMouseButton = _view.LeftMouseButton);
         }
 
         public void UpdateRightMouseButton()
         {
-            if (View.RightMouseButton)
+            if (_view.RightMouseButton)
             {
-                MouseEventBlocker.Register(Win32.MouseInputNotification.WM_RBUTTONUP);
-                MouseEventBlocker.Register(Win32.MouseInputNotification.WM_RBUTTONDOWN);
+                _mouseEventBlocker.Register(Win32.MouseInputNotification.WM_RBUTTONUP);
+                _mouseEventBlocker.Register(Win32.MouseInputNotification.WM_RBUTTONDOWN);
             }
             else
             {
-                MouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_RBUTTONUP);
-                MouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_RBUTTONDOWN);
+                _mouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_RBUTTONUP);
+                _mouseEventBlocker.Unregister(Win32.MouseInputNotification.WM_RBUTTONDOWN);
             }
 
-            Configuration[nameof(View.RightMouseButton)] = View.RightMouseButton.ToString();
+            _options.Update(o => o.RightMouseButton = _view.RightMouseButton);
         }
 
         public void UpdateBlockStatusLabel()
         {
-            View.BlockStatusLabel = $"Blocked events: {_blockCount}";
+            _view.BlockStatusLabel = $"Blocked events: {_blockCount}";
         }
     }
 }
