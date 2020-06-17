@@ -16,9 +16,12 @@
 // along with DoubleClickFix.  If not, see <http://www.gnu.org/licenses/>.
 
 using DoubleClickFix.Configuration;
+using DoubleClickFix.Options;
 using DoubleClickFix.Presenter;
 using DoubleClickFix.View;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Windows.Forms;
 
@@ -33,16 +36,25 @@ namespace DoubleClickFix
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var configuration = InitializeConfiguration("appsettings.json");
+            var host = Host.CreateDefaultBuilder()
+                .ConfigureAppConfiguration((context, builder) =>
+                {
+                    builder.AddWriteableJsonFile("appsettings.json", optional: true, reloadOnChange: true, createIfMissing: true);
+                })
+                .ConfigureServices((context, services) =>
+                {
+                    ConfigureServices(context.Configuration, services);
+                })
+                .Build();
 
-            var mouseEventBlocker = new MouseEventBlocker();
+            var services = host.Services;
+
+            var mainForm = services.GetRequiredService<MainForm>();
+            var mouseEventBlocker = services.GetRequiredService<MouseEventBlocker>();
+            mouseEventBlocker.Start();
             try
             {
-                mouseEventBlocker.Start();
-
-                var mainForm = new MainForm();
-                var mainPresenter = new MainPresenter(mainForm, mouseEventBlocker, configuration);
-
+                services.GetRequiredService<MainPresenter>();
                 Application.Run(mainForm);
             }
             finally
@@ -51,15 +63,17 @@ namespace DoubleClickFix
             }
         }
 
-        private static IConfigurationRoot InitializeConfiguration(string path)
+        private static void ConfigureServices(IConfiguration configuration, IServiceCollection services)
         {
-            var configuration = new ConfigurationBuilder()
-                .AddWriteableJsonFile(path, optional: true, reloadOnChange: true, createIfMissing: true)
-                .Build();
+            services.ConfigureWritable<AppSettings>(configuration.GetSection(nameof(AppSettings)));
 
-            // TODO set defaults
+            var mainForm = new MainForm();
+            services.AddSingleton(mainForm);
+            services.AddSingleton<IMainView>(mainForm);
 
-            return configuration;
+            services.AddSingleton<MouseEventBlocker>();
+
+            services.AddSingleton<MainPresenter>();
         }
     }
 }
